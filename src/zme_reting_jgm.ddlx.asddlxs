@@ -1,0 +1,90 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+    typeName: 'Coche',
+    typeNamePlural: 'Coches',
+    typeImageUrl: '',
+    imageUrl: 'Imagen',
+    title: {
+        type: #STANDARD,
+        label: '',
+        iconUrl: '',
+        criticality: '',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: 'Marca',
+        valueQualifier: '',
+        targetElement: '',
+        url: ''
+    },
+    description: {
+        type: #STANDARD,
+        label: '',
+        iconUrl: '',
+        criticality: '',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: 'Modelo',
+        valueQualifier: '',
+        targetElement: '',
+        url: ''
+    }
+}
+// hacemos activo la búsqueda del motor Hana
+@Search.searchable: true
+annotate entity z_i_renting_jgm with
+{
+  //z_i_renting_jgm
+  // este componente permise mostrar los detalles a mostrar sobre el item cuando se pulsa sobre ellos en los detalles
+  @UI.facet: [{ id: 'DetallesVehiculo', label: 'Detalles del Vehiculo', type: #COLLECTION, position: 10  },
+  { id: 'Vehiculo', parentId: 'DetallesVehiculo', label: 'Detalles', type: #FIELDGROUP_REFERENCE,
+  targetQualifier: 'DetallesVehiculo', position: 10 },
+  { id: 'Cliente', label: 'Clientes', type: #LINEITEM_REFERENCE, targetElement: '_DetCustomer', position: 20}]
+  @UI.fieldGroup: [{ qualifier: 'DetallesVehiculo', position: 10 }]
+
+  Matricula;
+  @UI: {lineItem: [{ position: 10, importance: #HIGH }],
+        selectionField: [{ position: 10 }] }
+       @Consumption.valueHelpDefinition: [{ entity: { name:  'z_b_brands_jgm', element: 'Marca'} }] 
+  Marca;
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  // con Shift + enter insertamos todos los elementos
+  @Search: {
+      defaultSearchElement: true,
+      ranking: #MEDIUM,
+      fuzzinessThreshold: 0.8 // umbral con toleracia al error de 0 a 1
+  }
+  Modelo;
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM }]
+    @Search: {
+      defaultSearchElement: true,
+      ranking: #MEDIUM,
+      fuzzinessThreshold: 0.8 // umbral con toleracia al error de 0 a 1
+  }
+  Color;
+  @UI.lineItem: [{ position: 40, importance: #LOW }]
+  Motor;
+  @UI.lineItem: [{ position: 50, importance: #LOW }]
+  Potencia;
+  @UI: { lineItem: [{ position: 60, importance: #HIGH }],
+         selectionField: [{ position: 20 }] }
+  Precio;
+  @UI.lineItem: [{ position: 70, importance: #HIGH }]
+  Moneda;
+  @UI.lineItem: [{ position: 80, importance: #HIGH }]
+  Alquilado;
+  // @UI.lineItem: [{ position: 90, importance: #HIGH, label: 'Tiempo Restante', criticality: 'TiempoRenta' }]
+  //TiempoRenta;
+  @UI.lineItem: [{ position: 90, importance: #HIGH, label: 'Estado', criticality: 'TiempoRenta' }]
+  Estado;
+
+  @UI.fieldGroup: [{ qualifier: 'DetallesVehiculo', position: 20 }]
+  Combustible;
+
+  @UI.fieldGroup: [{ qualifier: 'DetallesVehiculo', position: 30 }]
+  Consumo;
+
+  @UI.fieldGroup: [{ qualifier: 'DetallesVehiculo', position: 40 }]
+  FechaFabricacion;
+
+  @UI.fieldGroup: [{ qualifier: 'DetallesVehiculo', position: 40 }]
+  Puertas;
+
+}

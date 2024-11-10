@@ -1,0 +1,9 @@
+@EndUserText.label: 'Travel - Service Definition'
+define service Z_SD_TRAVEL_9194 {
+  expose Z_C_TRAVEL_9194         as Travel;
+  expose Z_C_BOOKING_9194        as Booking;
+  expose Z_C_BOOK_SUPPL_9194     as BookingSupplement;
+  expose /DMO/I_Supplement_StdVH as Supplement;
+  expose I_CurrencyStdVH         as Currency;
+  expose I_CountryVH             as Country;
+}

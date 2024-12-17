@@ -35,6 +35,11 @@ provider contract transactional_query
       
       BookingFee,
       TotalPrice,
+      @Semantics.amount.currencyCode: 'CurrencyCode'
+          @EndUserText.label: 'VAT Included'
+          @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_VIRT_ELEM_316'
+     virtual PriceWithVAT : /dmo/total_price,
+      
       @Consumption.valueHelpDefinition: [{ entity: { name: 'I_CurrencyStdVH',
                                                     element:'Currency' },
                                                     useForValidation: true }]

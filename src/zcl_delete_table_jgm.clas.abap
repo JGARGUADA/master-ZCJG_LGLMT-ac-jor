@@ -1,22 +1,13 @@
-CLASS zcl_delete_table_jgm DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZCL_DELETE_TABLE_JGM definition
+  public
+  create private .
 
-  PUBLIC SECTION.
-    INTERFACES if_oo_adt_classrun.
-  PROTECTED SECTION.
-  PRIVATE SECTION.
+public section.
+protected section.
+private section.
 ENDCLASS.
 
 
 
-CLASS zcl_delete_table_jgm IMPLEMENTATION.
-    METHOD if_oo_adt_classrun~main.
-        DELETE FROM zrent_brands_j.
-
-        IF sy-subrc eq 0.
-            out->WRITE(  'All data deleted' ).
-        ENDIF.
-    ENDMETHOD.
+CLASS ZCL_DELETE_TABLE_JGM IMPLEMENTATION.
 ENDCLASS.

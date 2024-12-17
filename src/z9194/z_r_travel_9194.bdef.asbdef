@@ -1,0 +1,230 @@
+//La clase con los métodos a implementarán van sobre código abap para cuando pulsemos botones en la aplicación.
+// La clase se puede manejar para cada una de las definiciones y no a nivel global. Por eso comentamos esta parte
+//managed implementation in class zbp_r_travel_9194 unique;
+managed;
+strict ( 2 ); // indica la versión de lenguaje a utilizar. El modo 2 es mas estricto
+with draft; // Para respaldar registros hasta que el usuario tenga los valores claros antes de guardar
+
+define behavior for Z_R_TRAVEL_9194 alias Travel
+//Se implementan tres clases diferentes para cada entidad. Así la lógica está divida en cada entidad y está más modularizado
+implementation in class zbp_r_travel_9194_i unique
+persistent table ztb_travel_9194
+draft table ztb_travel_9194d
+//draft table ztb_travel_9194d
+lock master // Sentencia obligatoria para que le dato maestro solo pueda actualizarse por un usuario a la vez
+total etag LastChangedAt// Algoritmo que controla la concurrencia en el servicio Odata
+authorization master ( global, instance )
+etag master LocalLastChangedAt // Cuando varios pueden pedir cambiar una instancia. Así la concurrencia se controla por el servidor de aplicaciones
+//Todos los eventos mostrados a conituación tienen su reflejo en métodos abap
+{
+  create ( precheck );
+  update ( precheck );
+  delete;
+  association _Booking { create ( features : instance, authorization : update ); with draft; }
+
+  field ( numbering : managed, readonly ) TravelUUID;
+  //Se definen los campos de tipo readonly
+  field ( readonly ) TravelId,
+  OverallStatus,
+  TotalPrice,
+  LastChangedAt,
+  LocalCreatedAt,
+  LocalCreatedBy,
+  LocalLastChangedAt,
+  LocalLastChangedBy;
+
+  // Cambiar característica de un campo. Dependiendo del status de un campo, no te permito utilizar un botón
+  field ( features : instance ) BookingFee;
+
+  //Que el botón esté habilitado o no en función de requerimientos de negocio
+  action ( features : instance, authorization : update ) acceptTravel result [1] $self;
+  action ( features : instance, authorization : update ) rejectTravel result [1] $self;
+  action ( features : instance, authorization : update ) deductDiscount
+    parameter zae_travel_discount_9194 result [1] $self;
+
+    action createTravelByTemplate result[1] $self;
+
+  //Ejecuta el código de un método entero para modularizar
+  internal action reCalcTotalPrice;
+
+
+  //Determinación que afecte a un campos específico o global´en guardado de una creación y una modificación
+  determination setTravelNumber on save { create; }
+  determination setStatusOpen on modify { create; }
+  determination calculateTotalPrice on modify { create; field BookingFee, CurrencyCode; } // a campos  BookingFee, CurrencyCode que tendrá la lógica implementada en el abap behavior implementation
+
+  //validaciones para el consumo como Fiori element o llamada API. Bloquea el estado transaccional. También se reporta al usuario el mensaje de error
+  validation validateCustomer on save { create; field CustomerID; }
+  validation validateAgency on save { create; field AgencyID; }
+  validation validateDates on save { create; field BeginDate, EndDate; }
+  validation validateCurrencyCode on save { create; field CurrencyCode; }
+
+  //Para que las validaciones tengan efecto se tienen que meter en sentencias determine action
+  determine action validateCustomerID { validation validateCustomer; }
+  determine action validateAgencyID { validation validateAgency; }
+  determine action validateDatesRange { validation validateDates; }
+  determine action validateCurrencyCodeID { validation validateCurrencyCode; }
+
+  //Efectos que podemos tener.
+  side effects
+  {
+    field BookingFee affects field TotalPrice;
+    determine action validateCustomerID executed on field CustomerID affects messages;
+    determine action validateAgencyID executed on field AgencyID affects messages;
+    determine action validateDatesRange executed on field BeginDate, field EndDate affects messages;
+    determine action validateCurrencyCodeID executed on field CurrencyCode affects messages;
+  }
+
+
+//Permitir acción de resume
+
+    draft action Resume with additional implementation;
+    draft action Edit;
+    draft action Activate optimized;
+    draft action Discard;
+
+//Validaciones a agregar en el modo de determinación del draft
+    draft determine action Prepare {
+        validation validateCustomer;
+        validation validateAgency;
+        validation validateDates;
+        validation validateCurrencyCode;
+        validation Booking~validateCustomer; // Hace referencia a las validaciones de abajo
+    }
+//Asignación de la tabla de persistencia. Se tiene que mapear la tabla de persistencia con la tabla draft
+
+mapping for  ztb_travel_9194 {
+
+    TravelUUID = travel_uuid;
+    TravelID   = travel_id;
+    AgencyID   = agency_id;
+    CustomerID = customer_id;
+    BeginDate = begin_date;
+    EndDate = end_date;
+    BookingFee = booking_fee;
+    TotalPrice = total_price;
+    CurrencyCode = currency_code;
+    Description = description;
+    OverallStatus = overall_status;
+    LocalCreatedBy = local_created_by;
+    LocalCreatedAt = local_created_at;
+    LocalLastChangedBy = local_last_changed_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+
+}
+}
+
+
+define behavior for Z_R_BOOKING_9194 alias Booking
+implementation in class zbp_r_booking_9194_i unique
+persistent table ztb_booking_9194
+draft table ztb_booking9194d // tabla draft
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  //En este caso el método create viene del padre
+  association _BookingSupplement { create (authorization : update); with draft; } //Delegamos la creación del booking supplement
+
+  association _Travel { with draft; }
+
+  //Definicióm características de los campos
+  field ( numbering  : managed, readonly ) BookingUUID;
+  field ( readonly ) TravelUUID, BookingID, BookingDate, LocalLastChangedAt;
+  field ( mandatory ) CustomerID, AirLineID, ConnectionID, FlightDate, CurrencyCode;
+
+  determination setBookingNumer on save {create; }
+  determination setBookingDate on save {create; }
+  determination calculateTotalPrice on modify {create; field FlightPrice, CurrencyCode; }
+
+  //validaciones para el consumo como Fiori element o llamada API. Bloquea el estado transaccional. También se reporta al usuario el mensaje de error
+  validation validateCustomer on save { create; field CustomerID; }
+  validation validateConnection on save { create; field AirLineID, ConnectionID, FlightDate; }
+  validation validateCurrencyCode on save { create; field CurrencyCode; }
+  validation validateStatus on save { create; field BookingStatus; }
+  validation validateFlightPrice on save { create; field FlightPrice; }
+  //
+  determine action validateFlightsCosts { validation validateFlightPrice; }
+
+  side effects {
+    field FlightPrice affects field _Travel.TotalPrice;
+    determine action validateFlightsCosts executed on field FlightPrice affects messages; }
+
+  //Mapeo tabla de persistencia
+  mapping for ztb_booking_9194
+    {
+        AirlineID = carrier_id;
+        BookingDate = booking_date;
+        BookingID = booking_id;
+        BookingStatus = booking_status;
+        BookingUUID = booking_uuid;
+        ConnectionID = connection_id;
+        CurrencyCode = currency_code;
+        CustomerID = customer_id;
+        FlightDate = flight_date;
+        FlightPrice = flight_price;
+        LocalLastChangedAt = local_last_changed_at;
+        TravelUUID = parent_uuid;
+
+
+
+   }
+
+  //validation validateCustomer;
+}
+
+
+//Definición de la última asociación
+define behavior for Z_R_BOOK_SUPPL_9194 alias BookingSupplement
+implementation in class zbp_r_book_suppl_9194_i unique
+persistent table ztb_booksup_9194
+draft table ztb_booksup9194d
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  association _Travel {with draft;}
+  association _Booking {with draft;}
+
+  field ( numbering : managed, readonly ) BookSupplUUID;
+  field (readonly ) TravelUUID, BookingUUID, BookingSupplementID, LocalLastChangedAt;
+
+
+
+    determination setBookSupplNumber on save { create; }
+    determination calculateTotalPrice on modify { create; field BookSupplPrice, CurrencyCode; }
+
+    validation validateSupplement on save { create; field SupplementID; }
+    validation validateCurrencyCode on save { create; field CurrencyCode; }
+    validation validatePrice on save { create; field BookSupplPrice; }
+
+    determine action validateSupplementPrice { validation validatePrice; }
+
+   side effects
+   {
+        field BookSupplPrice affects field _Travel.TotalPrice;
+        determine action validateSupplementPrice executed on field BookSupplPrice affects messages;
+
+   }
+
+mapping for ztb_booksup_9194 {
+    BookSupplPrice = price;
+    BookSupplUUID = booksuppl_uuid;
+    BookingSupplementID = booking_supplement_id;
+    BookingUUID = parent_uuid;
+    CurrencyCode = currency_code;
+    LocalLastChangedAt = local_last_changed_at;
+    SupplementID = supplement_id;
+    TravelUUID = root_uuid;
+
+
+   }
+
+
+}

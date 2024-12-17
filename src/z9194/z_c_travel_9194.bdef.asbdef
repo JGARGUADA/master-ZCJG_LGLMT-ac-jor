@@ -1,0 +1,48 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for Z_C_TRAVEL_9194 //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+
+  use action acceptTravel;
+  use action rejectTravel;
+  use action deductDiscount;
+  use action validateCustomerID;
+  use action validateAgencyID;
+  use action validateDatesRange;
+  use action validateCurrencyCodeID;
+
+  use action Resume;
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+
+  use association _Booking { create; with draft; }
+}
+
+define behavior for Z_C_BOOKING_9194 //alias <alias_name>
+{
+  use update;
+  use delete;
+
+  use action validateFlightsCosts;
+
+  use association _BookingSupplement { create; with draft; }
+  use association _Travel { with draft; }
+}
+
+define behavior for Z_C_BOOK_SUPPL_9194 //alias <alias_name>
+{
+  use update;
+  use delete;
+
+  use action validateSupplementPrice;
+
+  use association _Travel { with draft; }
+  use association _Booking { with draft; }
+}

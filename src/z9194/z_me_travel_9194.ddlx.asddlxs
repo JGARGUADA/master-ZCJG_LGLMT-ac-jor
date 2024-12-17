@@ -91,15 +91,19 @@ annotate entity Z_C_TRAVEL_9194 with
   importance: #MEDIUM }],
   identification: [{ position: 70 }] }
   TotalPrice;
+  
+  @UI:{ lineItem: [{ position: 71,
+                       importance: #MEDIUM }]}
+  PriceWithVAT;
 
-  @UI: { lineItem: [{ position: 80,
-  importance: #MEDIUM }],
-  identification: [{ position: 80 }] }
+  @UI:{ lineItem: [{ position: 80,
+                    importance: #MEDIUM }],
+        identification: [{ position: 80 }]}
   Description;
 
-  @UI: { lineItem: [{ position: 80,
+  @UI: { lineItem: [{ position: 90,
   importance: #HIGH }],
-  identification: [{ position: 80 }],
+  identification: [{ position: 90 }],
   selectionField: [{ position: 40 }],
   textArrangement: #TEXT_ONLY }
   OverallStatus;

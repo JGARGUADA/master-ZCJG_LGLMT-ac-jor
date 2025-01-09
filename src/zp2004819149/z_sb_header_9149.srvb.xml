@@ -4,30 +4,30 @@
   <asx:values>
    <SRVB>
     <METADATA>
-     <NAME>Z_SB_TRAVEL_9194</NAME>
+     <NAME>Z_SB_HEADER_9149</NAME>
      <TYPE>SRVB/SVB</TYPE>
-     <DESCRIPTION>Travel - Service Binding</DESCRIPTION>
+     <DESCRIPTION>Header - Service Binding</DESCRIPTION>
      <LANGUAGE>EN</LANGUAGE>
      <MASTER_LANGUAGE>EN</MASTER_LANGUAGE>
      <ABAP_LANGU_VERSION>5</ABAP_LANGU_VERSION>
     </METADATA>
     <CONTENT>
      <BIND_TYPE_IMPL>
-      <NAME>Z_SB_TRAVEL_9194</NAME>
+      <NAME>Z_SB_HEADER_9149</NAME>
      </BIND_TYPE_IMPL>
      <BIND_TYPE>ODATA</BIND_TYPE>
      <BIND_TYPE_VERSION>V4</BIND_TYPE_VERSION>
      <SERVICES>
       <item>
-       <SERVICE_NAME>Z_SD_TRAVEL_9194</SERVICE_NAME>
+       <SERVICE_NAME>Z_SD_HEADER_9149</SERVICE_NAME>
        <SERVICE_CONTENT>
         <item>
          <SERVICE_VERSION>0001</SERVICE_VERSION>
          <RELEASE_STATE>NOT_RELEASED</RELEASE_STATE>
          <SRVD_REF>
-          <URI>/sap/bc/adt/ddic/srvd/sources/z_sd_travel_9194</URI>
+          <URI>/sap/bc/adt/ddic/srvd/sources/z_sd_header_9149</URI>
           <TYPE>SRVD/SRV</TYPE>
-          <NAME>Z_SD_TRAVEL_9194</NAME>
+          <NAME>Z_SD_HEADER_9149</NAME>
          </SRVD_REF>
          <BIND_TYPE_DATA>
           <CONTENT>

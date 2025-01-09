@@ -1,0 +1,167 @@
+//La clase con los métodos a implementarán van sobre código abap para cuando pulsemos botones en la aplicación.
+// La clase se puede manejar para cada una de las definiciones y no a nivel global. Por eso comentamos esta parte
+
+managed;
+strict ( 2 ); // indica la versión de lenguaje a utilizar. El modo 2 es mas estricto
+with draft;
+
+define behavior for Z_R_HEADER_9149 alias Header
+//Se implementan tres clases diferentes para cada entidad. Así la lógica está divida en cada entidad y está más modularizado
+implementation in class zbp_r_header_9149_i unique
+persistent table zheader_9149
+draft table zheader_9149d
+lock master // Sentencia obligatoria para que el dato maestro solo pueda actualizarse por un usuario a la vez
+total etag LastChangedAt // Algoritmo que controla la concurrencia en el servicio Odata
+authorization master ( global, instance )
+etag master LocalLastChangedAt // Cuando varios usuarios pueden pedir cambiar una instancia. Así la concurrencia se controla por el servidor de apliaciones
+//Todos los eventos mostratos a continuación tienen su reflejo en métodos abap
+{
+  create ( precheck );
+  update ( precheck );
+  delete;
+  association _Items { create ( features : instance, authorization : update ); with draft; }
+
+  field ( numbering : managed, readonly ) HeaderUUID;
+  //Se definen los campos de tipo readonly
+  field ( readonly ) HeaderId,
+                     OrderStatus,
+                     LastChangedAt,
+                     LocalCreatedAt,
+                     LocalCreatedBy,
+                     LocalLastChangedAt,
+                     LocalLastChangedBy;
+
+    field ( mandatory ) Email;
+
+  // Cambiar característica de un campo. Dependiendo del status de un campo, no te permito utilizar un botón
+ // field ( features : instance ) BookingFee;
+
+  //Que el botón esté habilitado o no en función de requerimientos de negocio
+  //$self sería el me. Es decir la misma referencia
+  action ( features : instance, authorization : update ) acceptHeader result [1] $self;
+  action ( features : instance, authorization : update ) rejectHeader result [1] $self;
+
+
+
+  //Determinación que afecte a un camp específico o global en guardado de una creación y una modificación
+  determination setHeaderNumber on save { create; }
+  determination setStatusOpen on modify { create; }
+
+
+  //validaciones para el consumo como Fiori element o llamada API. Bloquea el estado transaccional. También se reporta al usuario el mensaje de error
+///  validation validateCustomer on save { create; field CustomerID; }
+ // validation validateAgency on save { create; field AgencyID; }
+  //validation validateDates on save { create; field DeliveryDate, CreateOn; } //No modifica datos. Bloquea estado transaccional. Si tenemos un fallo, reportamos a RAP para que se bloquee y reportara usuario
+  //validation validateCurrencyCode on save { create; field CurrencyCode; }
+
+  //Para que las validaciones tengan efecto se tienen que meter en sentencias determine action
+
+  //determine action validateDatesRange { validation validateDates; }
+ //determine action validateCurrencyCodeID { validation validateCurrencyCode; }
+
+  //Efectos que podemos tener.
+ /* side effects
+  {
+    field BookingFee affects field TotalPrice;
+    determine action validateCustomerID executed on field CustomerID affects messages;
+    determine action validateAgencyID executed on field AgencyID affects messages;
+    determine action validateDatesRange executed on field BeginDate, field EndDate affects messages;
+    determine action validateCurrencyCodeID executed on field CurrencyCode affects messages;   determinar action va relacionada con side effects
+  }*/
+
+
+//Permitir acción de resume
+
+    draft action Resume with additional implementation;
+    draft action Edit;
+    draft action Activate optimized;
+    draft action Discard;
+
+//Validaciones a agregar en el modo de determinación del draft
+    draft determine action Prepare {
+     //   validation validateCustomer;
+       // validation validateAgency;
+       // validation validateDates;
+       // validation validateCurrencyCode;
+      //  validation Booking~validateCustomer; // Hace referencia a las validaciones de abajo
+    }
+//Asignación de la tabla de persistencia. Se tiene que mapear la tabla de persistencia con la tabla draft
+
+mapping for  zheader_9149 {
+
+    HeaderUUID = header_uuid;
+    HeaderID = header_id;
+    Email = email;
+    FirstName  = first_name;
+    LastName = last_name;
+    Country = country;
+    CreateOn  = create_on;
+    DeliveryDate = delivery_date;
+    OrderStatus = order_status;
+    ImageUrl = image_url;
+    LocalCreatedBy = local_created_by;
+    LocalCreatedAt = local_created_at;
+    LocalLastChangedBy = local_last_changed_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+
+}
+}
+
+define behavior for Z_R_ITEMS_9149 alias Items
+implementation in class zbp_r_items_9149_i unique
+persistent table zitems_9149
+draft table zitems_9149d // tabla draft
+lock dependent by _Header
+authorization dependent by _Header
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  //En este caso el método create viene del padre
+
+
+  association _Header { with draft; }
+
+  //Definicióm características de los campos
+  //field ( numbering  : managed, readonly ) ItemsUUID  ;
+  field ( readonly ) HeaderUUID, ReleaseDate, LocalLastChangedAt, ItemsID, ItemsUUID;
+  //field ( mandatory ) ItemsID;
+
+  determination setItemNumber on save {create; }
+  //determination setBookingDate on save {create; }
+  //determination calculateTotalPrice on modify {create; field FlightPrice, CurrencyCode; }
+
+  //validaciones para el consumo como Fiori element o llamada API. Bloquea el estado transaccional. También se reporta al usuario el mensaje de error
+  //validation validateCustomer on save { create; field CustomerID; }
+ // validation validateConnection on save { create; field AirLineID, ConnectionID, FlightDate; }
+ // validation validateCurrencyCode on save { create; field CurrencyCode; }
+  //validation validateStatus on save { create; field ; }
+  //validation validateFlightPrice on save { create; field FlightPrice; }
+  //
+  //determine action validateFlightsCosts { validation validateFlightPrice; }
+
+  //side effects {
+    //field FlightPrice affects field _Travel.TotalPrice;
+    //determine action validateFlightsCosts executed on field FlightPrice affects messages; }
+
+  //Mapeo tabla de persistencia
+  mapping for zitems_9149
+    {
+
+        ItemsID = items_id;
+        HeaderUUID = parent_uuid;
+        Name = name;
+        Description = description;
+        ReleaseDate = release_date;
+        DiscontinuedDate = discontinued_date;
+        Price = price;
+        Height = height;
+        Width = width;
+        Depth = depth;
+        Quantity = quantity;
+        UnitOfMeasure = unit_of_measure;
+        LocalLastChangedAt = local_last_changed_at;
+        ItemsUUID = items_uuid;
+   }
+   }

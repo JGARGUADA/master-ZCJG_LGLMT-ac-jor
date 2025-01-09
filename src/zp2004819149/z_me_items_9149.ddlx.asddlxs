@@ -1,0 +1,78 @@
+@Metadata.layer: #CORE
+
+@UI: { headerInfo: { typeName: 'Item',
+                     typeNamePlural: 'Items', // pinta el texto de cabecera de la tabla que se pinta en pantalla
+                     title: { type: #STANDARD,
+                     value: 'ItemsID' } } } // se mostrará como título cuando se navegue
+
+
+annotate entity Z_C_ITEMS_9149 with
+{
+  @UI.facet: [{ id: 'Items', // Permite la creación de las pestañas
+            purpose: #STANDARD,
+            type: #IDENTIFICATION_REFERENCE,
+            label: 'Items',
+            position: 10 }]
+  @UI.hidden: true
+  HeaderUUID;
+
+  @UI.hidden: true
+  ItemsUUID;
+
+  @UI: { lineItem: [{ position: 20,
+  importance: #MEDIUM }],
+  identification: [{ position: 20 }] }
+  ItemsID;
+
+  @UI: { lineItem: [{ position: 30,
+    importance: #HIGH }],
+  identification: [{ position: 30 }] }
+  Name;
+
+  @UI: { lineItem: [{ position: 40,
+  importance: #HIGH }],
+  identification: [{ position: 40 }] }
+  Description;
+
+  @UI: { lineItem: [{ position: 50,
+  importance: #HIGH }],
+  identification: [{ position: 50 }] }
+  ReleaseDate;
+
+  @UI: { lineItem: [{ position: 60,
+  importance: #HIGH }],
+  identification: [{ position: 60 }] }
+  DiscontinuedDate;
+
+  @UI: { lineItem: [{ position: 70,
+  importance: #HIGH }],
+  identification: [{ position: 70 }] }
+  Price;
+
+  @UI: { lineItem: [{ position: 80,
+  importance: #HIGH }],
+  identification: [{ position: 80 }] }
+  Height;
+
+
+  @UI: { lineItem: [{ position: 90,
+  importance: #HIGH }],
+  identification: [{ position: 90 }] }
+  Width;
+
+  @UI: { lineItem: [{ position: 100,
+  importance: #HIGH }],
+  identification: [{ position:100 }] }
+  Depth;
+
+  @UI: { lineItem: [{ position: 110,
+  importance: #HIGH }],
+  identification: [{ position: 110 }] }
+  Quantity;
+
+  @UI: { lineItem: [{ position: 120,
+  importance: #HIGH }],
+  identification: [{ position: 120 }] }
+  UnitOfMeasure;
+
+}

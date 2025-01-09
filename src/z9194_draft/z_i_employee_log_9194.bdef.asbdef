@@ -1,0 +1,14 @@
+managed implementation in class zbp_i_employee_log_9194 unique;
+strict ( 2 );
+
+define behavior for Z_I_EMPLOYEE_LOG_9194 alias Employee
+persistent table zempl_log_9194
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+ // field ( readonly ) EmployeeNumber;
+}

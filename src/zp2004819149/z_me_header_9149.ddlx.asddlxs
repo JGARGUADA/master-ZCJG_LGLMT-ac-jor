@@ -1,0 +1,87 @@
+@Metadata.layer: #CORE
+annotate entity Z_C_HEADER_9149 with
+{
+  @UI.facet: [{ id: 'Header', // Permite la creación de las pestañas
+            purpose: #STANDARD,
+            type: #IDENTIFICATION_REFERENCE,
+            label: 'Header',
+            position: 10 },
+          { id: 'Items', // Permite la creación de las pestañas
+            purpose: #STANDARD,
+            type: #LINEITEM_REFERENCE,
+            label: 'Items',
+            position: 20,
+            targetElement: '_Items' }]
+  @UI.hidden: true
+  HeaderUUID;
+
+
+  @UI: { lineItem: [{ position: 10, importance: #HIGH }, // se muestra en todos los dispositivos
+                    { type: #FOR_ACTION,
+                      dataAction: 'acceptHeader',
+                      label: 'Accept Sales Order',
+                      position: 10 },
+                    { type: #FOR_ACTION,
+                      dataAction: 'rejectHeader',
+                      label: 'Reject Sales Order',
+                      position: 20 }],
+       identification: [{ position: 10, label: 'Sales Order ID'},   //El campo aparece en la primera posición
+                         { type: #FOR_ACTION,
+                          dataAction: 'acceptHeader',
+                          label: 'Accept Sales Order',
+                          position: 10 },
+                         { type: #FOR_ACTION,
+                          dataAction: 'rejectHeader',
+                          label: 'Reject Sales Order',
+                          position: 20 }],
+       selectionField: [{ position: 10 }]} // posición para los campos de selección
+  HeaderID;
+
+
+
+    @UI: { lineItem: [{ position: 20,
+                    importance: #MEDIUM }],
+        identification: [{ position: 30 }] }
+  Email;
+
+   @UI: { lineItem: [{ position: 30,
+                    importance: #MEDIUM }],
+        identification: [{ position: 30 }],
+        selectionField: [{ position: 30 }] }
+  FirstName;
+
+    @UI: { lineItem: [{ position: 40,
+                    importance: #MEDIUM }],
+        identification: [{ position: 40 }],
+        selectionField: [{ position: 40 }] }
+  LastName;
+
+  @UI: { lineItem: [{ position: 50,
+                    importance: #HIGH }],
+        identification: [{ position: 50 }],
+        selectionField: [{ position: 50 }] }
+  Country;
+
+ 
+   @UI: { lineItem: [{ position: 60,
+              importance: #LOW }],
+  identification: [{ position: 60 }] }
+
+  CreateOn;
+
+  @UI: { lineItem: [{ position: 70,
+          importance: #LOW }],
+  identification: [{ position: 70 }] }
+
+  DeliveryDate;
+
+  @UI: { lineItem: [{ position: 80,
+      importance: #MEDIUM }],
+  identification: [{ position: 80 }] }
+  OrderStatus;
+
+    @UI: { lineItem: [{ position: 90,
+                    importance: #LOW }],
+        identification: [{ position: 90 }] }
+  ImageUrl;
+}

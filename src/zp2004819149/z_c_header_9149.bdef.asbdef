@@ -1,0 +1,30 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for Z_C_HEADER_9149 //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+
+  use action acceptHeader;
+  use action rejectHeader;
+  //use action validateDatesRange;
+
+  use action Resume;
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+
+  use association _Items { create; with draft; }
+}
+
+define behavior for Z_C_ITEMS_9149 //alias <alias_name>
+{
+  use update;
+  use delete;
+
+  use association _Header { with draft; }
+}

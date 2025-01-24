@@ -24,13 +24,14 @@ define view entity Z_R_ITEMS_9149
       height                as Height,
       @Semantics.quantity.unitOfMeasure : 'UnitOfMeasure'
       width                 as Width,
-      @Semantics.quantity.unitOfMeasure : 'UnitOfMeasure' 
+      @Semantics.quantity.unitOfMeasure : 'UnitOfMeasure'
       depth                 as Depth,
       quantity              as Quantity,
       unit_of_measure       as UnitOfMeasure,
       //Etag - local OData
       @Semantics.systemDateTime.localInstanceLastChangedAt: true
       local_last_changed_at as LocalLastChangedAt,
+      last_changed_at       as LastChangedAt,
       _Header
       //  _association_name // Make association public
 }

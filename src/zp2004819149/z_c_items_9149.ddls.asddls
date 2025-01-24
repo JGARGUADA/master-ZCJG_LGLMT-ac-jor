@@ -42,6 +42,7 @@ define view entity Z_C_ITEMS_9149
       
       @Search.defaultSearchElement: true
       @EndUserText.label: 'Height'
+
       //@ObjectModel.text.element: [ 'Height' ]
       Height,
       

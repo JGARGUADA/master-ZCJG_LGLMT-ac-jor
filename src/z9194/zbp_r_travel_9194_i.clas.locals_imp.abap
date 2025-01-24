@@ -144,7 +144,7 @@ CLASS lhc_Travel IMPLEMENTATION.
         if travel-AgencyID is not initial.
 
             "Business check
-            if lv_technical_user eq 'CB9980001410' and travel-AgencyID ne '70021'. "WHAT EVER.
+            if lv_technical_user eq 'CB9980008018' and travel-AgencyID ne '70021'. "WHAT EVER.
                 update_granted = delete_granted = abap_true.
 *               delete_granted = abap_true.
             else.
@@ -207,7 +207,7 @@ CLASS lhc_Travel IMPLEMENTATION.
 *       lv_technical_user = 'DIFFERENET_USER'.
 
         if requested_authorizations-%create eq if_abap_behv=>mk-on.
-            if lv_technical_user eq 'CB9980001410'.
+            if lv_technical_user eq 'CB9980008018'.
                 result-%create = if_abap_behv=>auth-allowed.
             else.
                 result-%create = if_abap_behv=>auth-allowed.
@@ -223,7 +223,7 @@ CLASS lhc_Travel IMPLEMENTATION.
         if requested_authorizations-%update eq if_abap_behv=>mk-on or
            requested_authorizations-%action-Edit eq if_abap_behv=>mk-on.
 
-           if lv_technical_user eq 'CB9980001410'.
+           if lv_technical_user eq 'CB9980008018'.
             result-%update = if_abap_behv=>auth-allowed.
             result-%action-Edit = if_abap_behv=>auth-allowed.
            else.
@@ -234,7 +234,7 @@ CLASS lhc_Travel IMPLEMENTATION.
         endif.
 
         if requested_authorizations-%delete eq if_abap_behv=>mk-on.
-            if lv_technical_user eq 'CB9980001410'.
+            if lv_technical_user eq 'CB9980008018'.
                 result-%delete = if_abap_behv=>auth-allowed.
             else.
                 result-%delete = if_abap_behv=>auth-unauthorized.
@@ -735,7 +735,7 @@ METHOD precheck_auth.
     loop at entities into data(entity).
         modify_granted = abap_true.
 
-        if lv_technical_user eq 'CB9980001410' and entity-AgencyID ne '70025'. "WHAT EVER
+        if lv_technical_user eq 'CB9980008018' and entity-AgencyID ne '70025'. "WHAT EVER
             modify_granted = abap_true.
         endif.
 

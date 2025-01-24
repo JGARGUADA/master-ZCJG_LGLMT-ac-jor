@@ -35,7 +35,8 @@ CLASS zcl_load_data_9149 IMPLEMENTATION.
 
     "Delete possible entries; insert new entries
     DELETE FROM zheader_9149.
-*    INSERT zheader_9149 FROM TABLE @lt_header.
+
+    INSERT zheader_9149 FROM TABLE @lt_header.
 
     IF sy-subrc EQ 0.
       out->write( |Header Sales Orders: { sy-dbcnt } entries inserted| ).
@@ -54,7 +55,9 @@ CLASS zcl_load_data_9149 IMPLEMENTATION.
 
 
     "Delete possible entries; insert new entries
-**    DELETE FROM zitems_9149.
+    DELETE FROM zitems_9149.
+
+
     INSERT zitems_9149 FROM TABLE @lt_items.
 
     IF sy-subrc EQ 0.

@@ -1,4 +1,15 @@
 @Metadata.layer: #CORE
+
+
+@UI: { headerInfo: { typeName: 'Header',
+                     typeNamePlural: 'Headers', // pinta el texto de cabecera de la tabla que se pinta en pantalla
+                     title: { type: #STANDARD,
+                     value: 'HeaderID' } } , // se mostrará como título cuando se navegue
+       presentationVariant: [{ sortOrder: [{ by: 'HeaderID',
+                                             direction: #DESC }],
+                               visualizations: [{ type: #AS_LINEITEM }] }] }
+
+
 annotate entity Z_C_HEADER_9149 with
 {
   @UI.facet: [{ id: 'Header', // Permite la creación de las pestañas
@@ -19,29 +30,29 @@ annotate entity Z_C_HEADER_9149 with
   @UI: { lineItem: [{ position: 10, importance: #HIGH }, // se muestra en todos los dispositivos
                     { type: #FOR_ACTION,
                       dataAction: 'acceptHeader',
-                      label: 'Accept Sales Order',
+                      label: 'Accept Order',
                       position: 10 },
                     { type: #FOR_ACTION,
                       dataAction: 'rejectHeader',
-                      label: 'Reject Sales Order',
+                      label: 'Reject Order',
                       position: 20 }],
        identification: [{ position: 10, label: 'Sales Order ID'},   //El campo aparece en la primera posición
                          { type: #FOR_ACTION,
                           dataAction: 'acceptHeader',
-                          label: 'Accept Sales Order',
+                          label: 'Accept Order',
                           position: 10 },
                          { type: #FOR_ACTION,
                           dataAction: 'rejectHeader',
-                          label: 'Reject Sales Order',
-                          position: 20 }],
+                          label: 'Reject Order',
+                          position: 20 }
+                       ],
        selectionField: [{ position: 10 }]} // posición para los campos de selección
   HeaderID;
 
-
-
     @UI: { lineItem: [{ position: 20,
                     importance: #MEDIUM }],
-        identification: [{ position: 30 }] }
+        identification: [{ position: 20 }],
+        selectionField: [{ position: 20 }] }
   Email;
 
    @UI: { lineItem: [{ position: 30,
@@ -52,9 +63,9 @@ annotate entity Z_C_HEADER_9149 with
 
     @UI: { lineItem: [{ position: 40,
                     importance: #MEDIUM }],
-        identification: [{ position: 40 }],
+      identification: [{ position: 40 }],
         selectionField: [{ position: 40 }] }
-  LastName;
+ LastName;
 
   @UI: { lineItem: [{ position: 50,
                     importance: #HIGH }],

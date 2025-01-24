@@ -23,7 +23,8 @@ etag master LocalLastChangedAt // Cuando varios usuarios pueden pedir cambiar un
 
   field ( numbering : managed, readonly ) HeaderUUID;
   //Se definen los campos de tipo readonly
-  field ( readonly ) HeaderId,
+  field ( readonly )
+                     HeaderID,
                      OrderStatus,
                      LastChangedAt,
                      LocalCreatedAt,
@@ -31,7 +32,7 @@ etag master LocalLastChangedAt // Cuando varios usuarios pueden pedir cambiar un
                      LocalLastChangedAt,
                      LocalLastChangedBy;
 
-    field ( mandatory ) Email;
+    field ( mandatory )  Email;
 
   // Cambiar característica de un campo. Dependiendo del status de un campo, no te permito utilizar un botón
  // field ( features : instance ) BookingFee;
@@ -44,10 +45,10 @@ etag master LocalLastChangedAt // Cuando varios usuarios pueden pedir cambiar un
 
 
   //Determinación que afecte a un camp específico o global en guardado de una creación y una modificación
-  determination setHeaderNumber on save { create; }
+  determination setHeaderNumber on save { create; }   // Determinar número de Sales Order HeaderID
   determination setStatusOpen on modify { create; }
 
-
+//LAS VALIDACIONES SE DEFINEN TAMBIÉN EN Z_C_HEADER_9149 NO HEMOS PUESTO NINGUNA POR LO QUE ESTO DEBE ESTAR COMENTADO
   //validaciones para el consumo como Fiori element o llamada API. Bloquea el estado transaccional. También se reporta al usuario el mensaje de error
 ///  validation validateCustomer on save { create; field CustomerID; }
  // validation validateAgency on save { create; field AgencyID; }
@@ -124,9 +125,10 @@ etag master LocalLastChangedAt
   association _Header { with draft; }
 
   //Definicióm características de los campos
-  //field ( numbering  : managed, readonly ) ItemsUUID  ;
-  field ( readonly ) HeaderUUID, ReleaseDate, LocalLastChangedAt, ItemsID, ItemsUUID;
-  //field ( mandatory ) ItemsID;
+  field ( numbering  : managed, readonly ) ItemsUUID  ;
+  field ( readonly ) HeaderUUID;
+  //////////////////, ReleaseDate, LocalLastChangedAt, ItemsUUID;
+ field ( mandatory ) ItemsID;
 
   determination setItemNumber on save {create; }
   //determination setBookingDate on save {create; }
@@ -162,6 +164,7 @@ etag master LocalLastChangedAt
         Quantity = quantity;
         UnitOfMeasure = unit_of_measure;
         LocalLastChangedAt = local_last_changed_at;
+        LastChangedAt = last_changed_at;
         ItemsUUID = items_uuid;
    }
    }

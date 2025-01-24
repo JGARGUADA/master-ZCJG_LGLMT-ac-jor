@@ -21,6 +21,7 @@ define view entity Z_I_ITEMS_9149
       UnitOfMeasure,
       @Semantics.systemDateTime.localInstanceLastChangedAt: true
       LocalLastChangedAt,
+      LastChangedAt,
       /* Associations */
       _Header : redirected to parent Z_I_HEADER_9149
 }
